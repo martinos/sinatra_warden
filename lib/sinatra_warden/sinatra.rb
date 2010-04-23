@@ -75,9 +75,6 @@ module Sinatra
       app.set :auth_use_erb, false
       app.set :auth_login_template, :login
 
-      # OAuth Specific Settings
-      app.set :auth_use_oauth, false
-
       app.post '/unauthenticated/?' do
         status 401
         env['x-rack.flash'][:error] = options.auth_error_message if defined?(Rack::Flash)
@@ -85,23 +82,7 @@ module Sinatra
       end
 
       app.get '/login/?' do
-        if options.auth_use_oauth && !@auth_oauth_request_token.nil?
-          session[:request_token] = @auth_oauth_request_token.token
-          session[:request_token_secret] = @auth_oauth_request_token.secret
-          redirect @auth_oauth_request_token.authorize_url
-        else
-          options.auth_use_erb ? erb(options.auth_login_template) : haml(options.auth_login_template)
-        end
-      end
-
-      app.get '/oauth_callback/?' do
-        if options.auth_use_oauth
-          authenticate
-          env['x-rack.flash'][:success] = options.auth_success_message if defined?(Rack::Flash)
-          redirect options.auth_success_path
-        else
-          redirect options.auth_failure_path
-        end
+        options.auth_use_erb ? erb(options.auth_login_template) : haml(options.auth_login_template)
       end
 
       app.post '/login/?' do
