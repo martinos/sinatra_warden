@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 group :runtime do
   gem 'sinatra',        '>= 0.9.4'
   gem 'warden',         '>= 0.10.3'
+  gem 'oauth2',         '~> 0.0.4'
 end
 
 group :test do
